@@ -14,11 +14,7 @@ class Weather
 		two = {'temp' => forData['list'][16]['main']['temp'], 'tempmin' => forData['list'][16]['main']['temp_min'], 'tempmax' => forData['list'][16]['main']['temp_max'], 'logo' => forData['list'][16]['weather'].first['icon']}
 		three = {'temp' => forData['list'][24]['main']['temp'], 'tempmin' => forData['list'][24]['main']['temp_min'], 'tempmax' => forData['list'][24]['main']['temp_max'], 'logo' => forData['list'][24]['weather'].first['icon']}
 
-		#puts forData['list'][8]
-
 		return {'info' => [{'city' => city},weather,one,two,three]}
 	end
 
 end
-
-#Weather.getWeather('Le Mans')
