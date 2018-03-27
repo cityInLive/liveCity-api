@@ -1,35 +1,33 @@
 
 
-##
-# Gratuit jusqu'à 2 500 requêtes par jour.
-
 require 'google_maps_service'
+
+# Base class for researched maps's data.
+#
+# @author SEBILLE Florian
+# @since 0.1.0
+# @note free up to 2,500 requests per day.s
 
 class Maps
 
   @@API_KEY = 'AIzaSyAzfvWguWlvxRMPI2mFPI-BaW_-ufQxl8o'
 
-  def initialize
+  # 
+  # @param [String] searched city's name
+  # @return [Hash] the resulting of this research
+  def self.getCoordinates(city)
+    gmaps = GoogleMapsService::Client.new(key: @@API_KEY)
 
-    # Setup API keys
-    @gmaps = GoogleMapsService::Client.new(key: @@API_KEY)
+    data = gmaps.geocode(city)
 
-  end
-
-  def requete(uneVille)
-    data = @gmaps.geocode(uneVille)
-    return data.first
+    return {'info' => [{'city' => city},data.first.fetch(:geometry).fetch(:location)]}
   end
 
 
 end
 
-teste = Maps.new
+#teste = Maps.getCoordinates('le Mans')
 
-res = teste.requete('le Mans')
+#p teste
 
-p res
-
-p res['address_components']
-
-res.each_key {|key| puts "#{key}" }
+#{"info"=>[{"city"=>"le Mans"}, {:lat=>48.00611000000001, :lng=>0.199556}]}

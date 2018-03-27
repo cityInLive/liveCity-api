@@ -13,3 +13,8 @@ get '/weather/:city' do
 	content_type :json
 	Weather.getWeather(params['city'].to_s).to_json
 end
+
+get '/maps/:city' do
+	content_type :json
+	Maps.getCoordinates(params['city'].to_s).to_json
+end
