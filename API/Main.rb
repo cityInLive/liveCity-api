@@ -1,5 +1,5 @@
-require 'sinatra/json'
 require 'sinatra'
+require '../Requetes/Weather.rb'
 
 get '/' do
 	'API: This is our API! The client is <a href="https://livecity.vlntn.pw">here</a>.'
@@ -9,6 +9,7 @@ get '/test' do
 	'Hello world! :)'
 end
 
-get '/api/route.json' do
-  json key_1: 'value 1', key_2: 'value_2'
+get '/weather/:city' do
+	content_type :json
+	Weather.getWeather(params['city'].to_s).to_json
 end
