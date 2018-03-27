@@ -1,3 +1,4 @@
+require 'sinatra/json'
 require 'sinatra'
 
 get '/' do
@@ -6,4 +7,8 @@ end
 
 get '/test' do
 	'Hello world! :)'
+end
+
+get '/api/route.json' do
+  json key_1: 'value 1', key_2: 'value_2'
 end
