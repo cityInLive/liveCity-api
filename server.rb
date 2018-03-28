@@ -1,5 +1,6 @@
 require 'sinatra'
-require '../Requetes/Weather.rb'
+require_relative 'APIs/Weather'
+require_relative 'APIs/Maps'
 
 get '/' do
 	'API: This is our API! The client is <a href="https://livecity.vlntn.pw">here</a>.'
