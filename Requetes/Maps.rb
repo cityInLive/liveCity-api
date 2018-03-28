@@ -12,22 +12,23 @@ class Maps
 
   @@API_KEY = 'AIzaSyAzfvWguWlvxRMPI2mFPI-BaW_-ufQxl8o'
 
-  # 
+  #
   # @param [String] searched city's name
   # @return [Hash] the resulting of this research
   def self.getCoordinates(city)
-    gmaps = GoogleMapsService::Client.new(key: @@API_KEY)
+    #gmaps = GoogleMapsService::Client.new(key: @@API_KEY)
+    data = HTTParty.get('https://maps.googleapis.com/maps/api/place/textsearch/json?query=' + city + '&key=' + @@API_KEY).parsed_response
+    p data
+    #data = gmaps.geocode(city)
 
-    data = gmaps.geocode(city)
-
-    return {'info' => [{'city' => city},data.first.fetch(:geometry).fetch(:location)]}
+    #return {'info' => [{'city' => data.first.fetch(:address_components).first.fetch(:long_name)},data.first.fetch(:geometry).fetch(:location)]}
   end
 
 
 end
 
-#teste = Maps.getCoordinates('le Mans')
+teste = Maps.getCoordinates('le mans')
 
-#p teste
+puts teste
 
 #{"info"=>[{"city"=>"le Mans"}, {:lat=>48.00611000000001, :lng=>0.199556}]}
