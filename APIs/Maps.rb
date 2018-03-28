@@ -1,5 +1,3 @@
-
-
 require 'google_maps_service'
 
 # Base class for researched maps's data.
