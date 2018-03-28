@@ -17,5 +17,6 @@ end
 
 get '/maps/:city' do
 	content_type :json
+	headers 'Access-Control-Allow-Origin' => 'http://localhost:9000'
 	Maps.getCoordinates(params['city'].to_s).to_json
 end
