@@ -19,7 +19,7 @@ class Maps
 
     data = gmaps.geocode(city)
 
-    if data.empty? then
+    if data.empty? || !(data.first.fetch(:address_components).first.fetch(:long_name).include?(city)) then
       return {'Error' => "#{city} not found"}
     else return {'city' => data.first.fetch(:address_components).first.fetch(:long_name),'coords' => data.first.fetch(:geometry).fetch(:location)} end
   end
