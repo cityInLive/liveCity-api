@@ -1,4 +1,5 @@
 require 'google_maps_service'
+require 'httparty'
 
 # Base class for researched maps's data.
 #
@@ -14,19 +15,22 @@ class Maps
   # @param [String] searched city's name
   # @return [Hash] the resulting of this research
   def self.getCoordinates(city)
-    #gmaps = GoogleMapsService::Client.new(key: @@API_KEY)
-    data = HTTParty.get('https://maps.googleapis.com/maps/api/place/textsearch/json?query=' + city + '&key=' + @@API_KEY).parsed_response
-    p data
-    #data = gmaps.geocode(city)
+    gmaps = GoogleMapsService::Client.new(key: @@API_KEY)
 
-    #return {'info' => [{'city' => data.first.fetch(:address_components).first.fetch(:long_name)},data.first.fetch(:geometry).fetch(:location)]}
+    data = gmaps.geocode(city)
+
+    if data.empty? then
+      return {'Error' => "#{city} not found"}
+    else return {'city' => data.first.fetch(:address_components).first.fetch(:long_name),'coords' => data.first.fetch(:geometry).fetch(:location)} end
   end
 
 
 end
 
-teste = Maps.getCoordinates('le mans')
+#teste = Maps.getCoordinates('ytvfwxb')
+#puts teste
+#{"Error"=>"ytvfwxb not found"}
 
-puts teste
-
-#{"info"=>[{"city"=>"le Mans"}, {:lat=>48.00611000000001, :lng=>0.199556}]}
+#teste = Maps.getCoordinates('le mans')
+#puts teste
+#{"city"=>"Le Mans", "coords"=>{:lat=>48.00611000000001, :lng=>0.199556}}
