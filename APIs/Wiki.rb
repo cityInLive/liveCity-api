@@ -50,12 +50,14 @@ class Wiki
 
     tabData = data[1..data.index("'''")].split("| ")
 
-    res["region"] = self.chercheData(tabData, "région")
-    res["Departement"] = self.chercheData(tabData, "département")
-    res["maire"] = self.chercheData(tabData, "maire")
-    res["cp"] = self.chercheData(tabData, "cp")
-    res["population"] = self.chercheData(tabData, "population")
-    res["populationAgglo"] = self.chercheData(tabData, "population agglomération")
+    ["région", "département", "maire", "cp", "population", "population agglomération", "superficie"].each { |valeur|
+
+      donnee = self.chercheData(tabData, valeur)
+
+      unless donnee.eql?(nil) then
+        res[valeur] = donnee
+      end
+    }
 
     return res
   end
@@ -68,4 +70,9 @@ class Wiki
 
 end
 
-#Wiki.getWikiInfo('Beijing')
+rep = Wiki.getWikiInfo('le Mans')
+
+rep.each { |key, valeur|
+  puts key + ":"
+  puts valeur
+}
