@@ -44,23 +44,28 @@ class Wiki
   def self.giveData(source, city)
     res = Hash.new
 
-    data = source.fetch("query").fetch("pages").values.first.fetch("revisions").first.fetch("*")
+    data = source.fetch("query").fetch("pages").values.first
 
-    res["summary"] = self.chercheSummary(data)
+    if data.key?("revisions") then
+      data = data.fetch("revisions").first.fetch("*")
 
-    tabData = data[1..data.index("'''")].split("| ")
+      res["summary"] = self.chercheSummary(data)
 
-    ["région", "département", "maire", "cp", "population", "population agglomération", "superficie"].each { |valeur|
+      tabData = data[1..data.index("'''")].split("| ")
 
-      donnee = self.chercheData(tabData, valeur)
+      ["région", "département", "maire", "cp", "population", "population agglomération", "superficie"].each { |valeur|
 
-      unless donnee.eql?(nil) then
-        if donnee.length > 2 then
-          res[valeur] = donnee
+        donnee = self.chercheData(tabData, valeur)
+
+        unless donnee.eql?(nil) then
+          if donnee.length > 2 then
+            res[valeur] = donnee
+          end
         end
-      end
-    }
-
+      }
+    else
+      res["ERROR"] = {'code' => '007', 'message' => "#{city} not found"}
+    end
     return res
   end
 
@@ -72,9 +77,9 @@ class Wiki
 
 end
 
-rep = Wiki.getWikiInfo('Londres')
+#rep = Wiki.getWikiInfo('le Mans')
 
-rep.each { |key, valeur|
-  puts key + ":"
-  p valeur
-}
+#rep.each { |key, valeur|
+#  puts key + ":"
+#  p valeur
+#}
