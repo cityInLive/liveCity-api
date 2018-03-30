@@ -19,7 +19,7 @@ class Wiki
             elem = elem.split("|")[1]
           end
         end
-        return elem
+        return elem.delete "\n"
       end
     }
     return nil
@@ -55,7 +55,9 @@ class Wiki
       donnee = self.chercheData(tabData, valeur)
 
       unless donnee.eql?(nil) then
-        res[valeur] = donnee
+        if donnee.length > 2 then
+          res[valeur] = donnee
+        end
       end
     }
 
@@ -70,9 +72,9 @@ class Wiki
 
 end
 
-rep = Wiki.getWikiInfo('le Mans')
+rep = Wiki.getWikiInfo('Londres')
 
 rep.each { |key, valeur|
   puts key + ":"
-  puts valeur
+  p valeur
 }
