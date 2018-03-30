@@ -15,8 +15,8 @@ get '/weather/:city' do
 	Weather.getWeather(params['city'].to_s).to_json
 end
 
-get '/maps/:city' do
+get '/wiki/:city' do
 	content_type :json
 	headers 'Access-Control-Allow-Origin' => 'http://localhost:9000'
-	Maps.getCoordinates(params['city'].to_s).to_json
+	Wiki.getWikiInfo(params['city'].to_s).to_json
 end
