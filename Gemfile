@@ -16,3 +16,4 @@ gem 'httparty'        # html rest requests
 
 gem 'instagram'       # gem for Insta.rb
 gem 'instagram_api_client'
+gem 'twitter'
