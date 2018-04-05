@@ -15,8 +15,10 @@ class Weather
 	# @return [Hash] weather's data
 	def self.getWeather(city)
 
-		forData = HTTParty.get('http://api.openweathermap.org/data/2.5/forecast?APPID='+API_KEY+'&q='+city+'&units=metric&lang=fr').parsed_response
-		curData = HTTParty.get('http://api.openweathermap.org/data/2.5/weather?APPID='+API_KEY+'&q='+city+'&units=metric&lang=fr').parsed_response
+		forURL = URI.parse(URI.escape('http://api.openweathermap.org/data/2.5/forecast?APPID='+API_KEY+'&q='+city+'&units=metric&lang=fr'))
+		curURL = URI.parse(URI.escape('http://api.openweathermap.org/data/2.5/weather?APPID='+API_KEY+'&q='+city+'&units=metric&lang=fr'))
+		forData = HTTParty.get(forURL).parsed_response
+		curData = HTTParty.get(curURL).parsed_response
 
 		if !forData.has_value?('404')  || !curData.has_value?('404') then
 
