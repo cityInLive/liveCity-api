@@ -9,7 +9,7 @@ class Server < Sinatra::Base
 
 	before do
 		content_type :json, 'charset' => 'utf-8'
-		headers 'Access-Control-Allow-Origin' => 'https://localhost:4200'
+		headers 'Access-Control-Allow-Origin' => '*'
 	end
 
 	get '/' do
