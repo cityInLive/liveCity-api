@@ -29,11 +29,30 @@ class Wiki
     tab = tabData.split(". ")
     tab.each { |elem|
       if elem.include?("'''") then
-        return elem[elem.index("'''")..-1]
+        elem = elem[elem.index("'''")..-1]
+
+        while(elem.include?("("))
+          elem[elem[elem.index("(")..elem.index(")")]] = ""
+        end
+
+        while(elem.include?("[["))
+          elem[elem.index("[[")..(elem.index("]]")+1)] = elem[(elem.index("[[")+2)..(elem.index("]]")-1)].split("|").first
+        end
+        return elem
       end
     }
   end
 
+  def self.cherchePicture(city)
+    data = HTTParty.get('https://fr.wikipedia.org/w/api.php?action=query&titles=' + city + '&prop=pageimages&format=json').parsed_response
+
+    url = data.fetch('query').fetch("pages").values.first.fetch('thumbnail').fetch('source')
+
+    url[url[url.index(url.split("/").select {|v| v.include?("px")}.first)..url.index("px")-1]] = "300"
+
+    return url
+
+  end
 
   #@@API_KEY = 'AIzaSyAzfvWguWlvxRMPI2mFPI-BaW_-ufQxl8o'
 
@@ -49,11 +68,15 @@ class Wiki
     if data.key?("revisions") then
       data = data.fetch("revisions").first.fetch("*")
 
+      self.cherchePicture(city)
+
       res["summary"] = self.chercheSummary(data)
+
+      res["image"] = self.cherchePicture(city)
 
       tabData = data[1..data.index("'''")].split("| ")
 
-      ["région", "département", "maire", "cp", "population", "population agglomération", "superficie"].each { |valeur|
+      ["légende", "région", "département", "maire", "cp", "population", "population agglomération", "superficie"].each { |valeur|
 
         donnee = self.chercheData(tabData, valeur)
 
@@ -77,7 +100,9 @@ class Wiki
 
 end
 
-#rep = Wiki.getWikiInfo('le Mans')
+#https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/1164px-Paris_-_Eiffelturm_und_Marsfeld2.jpg
+
+#rep = Wiki.getWikiInfo('Paris')
 
 #rep.each { |key, valeur|
 #  puts key + ":"
