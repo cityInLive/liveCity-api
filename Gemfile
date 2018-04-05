@@ -1,7 +1,19 @@
 source 'https://rubygems.org'
 
-gem 'sinatra' # web server
-gem 'shotgun' # auto server reload
+#
+# MAIN SERVER GEMS
+#
+
+gem 'sinatra'         # web server
 gem 'sinatra-contrib' # json, ...
-gem 'httparty'
+gem 'shotgun'         # auto server reload
+gem 'webrick'         # web server with ssl
+gem 'httparty'        # html rest requests
+
+#
+# APIs GEMS
+#
+
+gem 'instagram'       # gem for Insta.rb
+gem 'instagram_api_client'
 gem 'twitter'
