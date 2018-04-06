@@ -2,7 +2,7 @@
 
 require 'sinatra'
 require_relative 'APIs/Weather'
-require_relative 'APIs/Instagrame'
+require_relative 'APIs/Instagram'
 require_relative 'APIs/Wikipedia'
 
 class Server < Sinatra::Base

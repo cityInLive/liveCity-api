@@ -1,20 +1,13 @@
 require 'httparty'
-require 'instagram'
-require 'instagram_api_client'
 
 # @author SEBILLE Florian
 # @since 0.1.0
 
 # Researching weather data
 
-class Instagrame
+class Instagram
 
   @@ACCES_TOKEN = '7423327355.ff1858c.426f98ed0af64e2c88bf946681cbf645'
-
-  Instagram.configure do |config|
-    config.client_id = "ff1858ce0188426aa415989540c0db1a"
-    config.access_token = '7423327355.ff1858c.426f98ed0af64e2c88bf946681cbf645'
-  end
 
 	#
 	# @param [String] city's name

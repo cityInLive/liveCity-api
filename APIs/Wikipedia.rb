@@ -43,7 +43,7 @@ class Wikipedia
           elem[elem.index("[[")..(elem.index("]]")+1)] = elem[(elem.index("[[")+2)..(elem.index("]]")-1)].split("|").first
         end
 
-        return elem
+        return elem.delete "'"
       end
     }
   end
@@ -78,9 +78,13 @@ class Wikipedia
 
       self.cherchePicture(city)
 
-      res["summary"] = self.chercheSummary(data)
+      res["city"] = city
 
-      res["image"] = self.cherchePicture(city)
+      res["info"] = Hash.new
+
+      res["info"]["summary"] = self.chercheSummary(data)
+
+      res["info"]["image"] = self.cherchePicture(city)
 
       tabData = data[1..data.index("'''")].split("| ")
 
@@ -90,7 +94,7 @@ class Wikipedia
 
         unless donnee.eql?(nil) then
           if donnee.length > 2 then
-            res[valeur] = donnee
+            res["info"][valeur] = donnee
           end
         end
       }
@@ -111,7 +115,7 @@ end
 
 #https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/1164px-Paris_-_Eiffelturm_und_Marsfeld2.jpg
 
-#rep = Wikipedia.getWikiInfo('Allonnes')
+#rep = Wikipedia.getWikiInfo('Le Mans')
 
 #rep.each { |key, valeur|
 #  puts key + ":"
