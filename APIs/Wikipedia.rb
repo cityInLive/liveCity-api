@@ -31,8 +31,12 @@ class Wikipedia
       if elem.include?("'''") then
         elem = elem[elem.index("'''")..-1]
 
-        while(elem.include?("<ref>"))
-          elem[elem[elem.index("<ref>")..(elem.index("</ref>")+5)]] = ""
+        while(elem.include?("<ref"))
+          elem[elem[elem.index("<ref")..(elem.index("</ref>")+5)]] = ""
+        end
+
+        while(elem.include?("<br>"))
+          elem[elem[elem.index("<br>")..(elem.index("<br>")+3)]] = ""
         end
 
         while(elem.include?("("))
@@ -54,11 +58,14 @@ class Wikipedia
 
     data = HTTParty.get(url).parsed_response
 
-    url = data.fetch('query').fetch("pages").values.first.fetch('thumbnail').fetch('source')
+    if data.fetch('query').fetch("pages").values.first.has_key?('thumbnail') then
+      url = data.fetch('query').fetch("pages").values.first.fetch('thumbnail').fetch('source')
 
-    url[url[url.index(url.split("/").select {|v| v.include?("px")}.first)..url.index("px")-1]] = "300"
+      url[url[url.index(url.split("/").select {|v| v.include?("px")}.first)..url.index("px")-1]] = "300"
 
-    return url
+      return url
+    end
+    return false
 
   end
 
@@ -68,15 +75,13 @@ class Wikipedia
   # @param [String] searched city's name
   # @return [Hash] the resulting of this research
 
-  def self.giveData(source, city)
+  def self.giveData(source, city, departement)
     res = Hash.new
 
     data = source.fetch("query").fetch("pages").values.first
 
     if data.key?("revisions") then
       data = data.fetch("revisions").first.fetch("*")
-
-      #self.cherchePicture(city)
 
       res["image"] = Hash.new
       res["info"] = Hash.new
@@ -85,7 +90,9 @@ class Wikipedia
 
       res["desc"] = self.chercheSummary(data)
 
-      res["image"]["url"] = self.cherchePicture(city)
+      if urlPicture = self.cherchePicture(city) != false then
+        res["image"]["url"] = self.cherchePicture(city)
+      else return self.getWikiInfo(city + " (" + departement + ")", departement) end
 
       tabData = data[1..data.index("'''")].split("| ")
 
@@ -107,10 +114,10 @@ class Wikipedia
     return res
   end
 
-  def self.getWikiInfo(city)
+  def self.getWikiInfo(city, departement)
     url = URI.parse(URI.escape('https://fr.wikipedia.org/w/api.php?action=query&titles=' + city + '&prop=revisions&rvprop=content&rvsection=0&format=json'))
     data = HTTParty.get(url).parsed_response
-    return self.giveData(data, city)
+    return self.giveData(data, city, departement)
   end
 
 
@@ -118,9 +125,9 @@ end
 
 #https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/1164px-Paris_-_Eiffelturm_und_Marsfeld2.jpg
 
-#rep = Wikipedia.getWikiInfo('Le Mans')
+rep = Wikipedia.getWikiInfo('Allonnes' , 'Sarthe')
 
-#puts JSON.pretty_generate(rep)
+puts JSON.pretty_generate(rep)
 #rep.each { |key, valeur|
 #  puts key + ":"
 #  p valeur
