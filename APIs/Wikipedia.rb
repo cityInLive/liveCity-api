@@ -61,7 +61,7 @@ class Wikipedia
     if data.fetch('query').fetch("pages").values.first.has_key?('thumbnail') then
       url = data.fetch('query').fetch("pages").values.first.fetch('thumbnail').fetch('source')
 
-      url[url[url.index(url.split("/").select {|v| v.include?("px")}.first)..url.index("px")-1]] = "300"
+      url[url[url.index(url.split("/").select {|v| v.include?("px")}.first)..url.index("px")-1]] = "600"
 
       return url
     end
