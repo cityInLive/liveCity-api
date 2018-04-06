@@ -7,7 +7,7 @@ require 'instagram_api_client'
 
 # Researching weather data
 
-class Instagram
+class Instagrame
 
   @@ACCES_TOKEN = '7423327355.ff1858c.426f98ed0af64e2c88bf946681cbf645'
 
@@ -32,8 +32,8 @@ class Instagram
 
 end
 
-rep = Instagram.getMediaInsta('le Mans')
+#rep = Instagram.getMediaInsta('le Mans')
 
-p rep
+#p rep
 
 #https://www.instagram.com/oauth/authorize/?client_id=ff1858ce0188426aa415989540c0db1a&redirect_uri=https://livecity.vlntn.pw/&response_type=token&scope=public_content
