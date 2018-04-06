@@ -3,7 +3,7 @@
 require 'sinatra'
 require_relative 'APIs/Weather'
 require_relative 'APIs/Insta'
-require_relative 'APIs/Wiki'
+require_relative 'APIs/Wikipedia'
 
 class Server < Sinatra::Base
 
@@ -21,7 +21,7 @@ class Server < Sinatra::Base
 	end
 
 	get '/wiki/:city' do
-		Wiki.getWikiInfo(params['city'].to_s).to_json
+		Wikipedia.getWikiInfo(params['city'].to_s).to_json
 	end
 
 	get '/insta/:city' do

@@ -5,7 +5,7 @@
 
 require 'httparty'
 
-class Wiki
+class Wikipedia
 
 
   def self.chercheData(tabData, valeur)
@@ -31,6 +31,10 @@ class Wiki
       if elem.include?("'''") then
         elem = elem[elem.index("'''")..-1]
 
+        while(elem.include?("<ref>"))
+          elem[elem[elem.index("<ref>")..(elem.index("</ref>")+5)]] = ""
+        end
+
         while(elem.include?("("))
           elem[elem[elem.index("(")..elem.index(")")]] = ""
         end
@@ -38,13 +42,17 @@ class Wiki
         while(elem.include?("[["))
           elem[elem.index("[[")..(elem.index("]]")+1)] = elem[(elem.index("[[")+2)..(elem.index("]]")-1)].split("|").first
         end
+
         return elem
       end
     }
   end
 
   def self.cherchePicture(city)
-    data = HTTParty.get('https://fr.wikipedia.org/w/api.php?action=query&titles=' + city + '&prop=pageimages&format=json').parsed_response
+
+    url = URI.parse(URI.escape('https://fr.wikipedia.org/w/api.php?action=query&titles=' + city + '&prop=pageimages&format=json'))
+
+    data = HTTParty.get(url).parsed_response
 
     url = data.fetch('query').fetch("pages").values.first.fetch('thumbnail').fetch('source')
 
@@ -93,7 +101,8 @@ class Wiki
   end
 
   def self.getWikiInfo(city)
-    data = HTTParty.get('https://fr.wikipedia.org/w/api.php?action=query&titles=' + city + '&prop=revisions&rvprop=content&rvsection=0&format=json').parsed_response
+    url = URI.parse(URI.escape('https://fr.wikipedia.org/w/api.php?action=query&titles=' + city + '&prop=revisions&rvprop=content&rvsection=0&format=json'))
+    data = HTTParty.get(url).parsed_response
     return self.giveData(data, city)
   end
 
@@ -102,9 +111,9 @@ end
 
 #https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/1164px-Paris_-_Eiffelturm_und_Marsfeld2.jpg
 
-#rep = Wiki.getWikiInfo('Paris')
+rep = Wiki.getWikiInfo('Istres')
 
-#rep.each { |key, valeur|
-#  puts key + ":"
-#  p valeur
-#}
+rep.each { |key, valeur|
+  puts key + ":"
+  p valeur
+}
