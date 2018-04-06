@@ -125,9 +125,9 @@ end
 
 #https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/1164px-Paris_-_Eiffelturm_und_Marsfeld2.jpg
 
-rep = Wikipedia.getWikiInfo('Allonnes' , 'Sarthe')
+#rep = Wikipedia.getWikiInfo('Allonnes' , 'Sarthe')
 
-puts JSON.pretty_generate(rep)
+#puts JSON.pretty_generate(rep)
 #rep.each { |key, valeur|
 #  puts key + ":"
 #  p valeur
