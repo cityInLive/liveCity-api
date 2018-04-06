@@ -7,7 +7,7 @@ require 'instagram_api_client'
 
 # Researching weather data
 
-class Insta
+class Instagram
 
   @@ACCES_TOKEN = '7423327355.ff1858c.426f98ed0af64e2c88bf946681cbf645'
 
@@ -32,7 +32,7 @@ class Insta
 
 end
 
-rep = Insta.getMediaInsta('le Mans')
+rep = Instagram.getMediaInsta('le Mans')
 
 p rep
 

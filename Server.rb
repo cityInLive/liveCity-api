@@ -2,7 +2,7 @@
 
 require 'sinatra'
 require_relative 'APIs/Weather'
-require_relative 'APIs/Insta'
+require_relative 'APIs/Instagram'
 require_relative 'APIs/Wikipedia'
 
 class Server < Sinatra::Base
@@ -20,12 +20,12 @@ class Server < Sinatra::Base
 		Weather.getWeather(params['city'].to_s).to_json
 	end
 
-	get '/wiki/:city' do
+	get '/wikipedia/:city' do
 		Wikipedia.getWikiInfo(params['city'].to_s).to_json
 	end
 
-	get '/insta/:city' do
-		Insta.getMediaInsta(params['city'].to_s).to_json
+	get '/instagram/:city' do
+		Instagram.getMediaInsta(params['city'].to_s).to_json
 	end
 
 end
