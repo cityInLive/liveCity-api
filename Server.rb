@@ -4,6 +4,7 @@ require 'sinatra'
 require_relative 'APIs/Weather'
 require_relative 'APIs/Instagram'
 require_relative 'APIs/Wikipedia'
+require_relative 'APis/Twitter'
 
 class Server < Sinatra::Base
 
@@ -27,5 +28,9 @@ class Server < Sinatra::Base
 	get '/instagram/:city' do
 		Instagrame.getMediaInsta(params['city'].to_s).to_json
 	end
+
+	#get '/twitter/:lat,:long' do
+	#	Twitter.getTweets(params['lat'].to_s,params['long'].to_s).to_json
+	#end
 
 end
