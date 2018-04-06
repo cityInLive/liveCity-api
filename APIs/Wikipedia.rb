@@ -43,7 +43,7 @@ class Wikipedia
           elem[elem.index("[[")..(elem.index("]]")+1)] = elem[(elem.index("[[")+2)..(elem.index("]]")-1)].split("|").first
         end
 
-        return elem.delete "'"
+        return elem.delete "'''"
       end
     }
   end
@@ -76,15 +76,16 @@ class Wikipedia
     if data.key?("revisions") then
       data = data.fetch("revisions").first.fetch("*")
 
-      self.cherchePicture(city)
+      #self.cherchePicture(city)
+
+      res["image"] = Hash.new
+      res["info"] = Hash.new
 
       res["city"] = city
 
-      res["info"] = Hash.new
+      res["desc"] = self.chercheSummary(data)
 
-      res["info"]["summary"] = self.chercheSummary(data)
-
-      res["info"]["image"] = self.cherchePicture(city)
+      res["image"]["url"] = self.cherchePicture(city)
 
       tabData = data[1..data.index("'''")].split("| ")
 
@@ -94,7 +95,9 @@ class Wikipedia
 
         unless donnee.eql?(nil) then
           if donnee.length > 2 then
-            res["info"][valeur] = donnee
+            if valeur.eql?("légende") then
+              res["image"]["desc"] = donnee
+            else res["info"][valeur] = donnee end
           end
         end
       }
@@ -117,6 +120,7 @@ end
 
 #rep = Wikipedia.getWikiInfo('Le Mans')
 
+#puts JSON.pretty_generate(rep)
 #rep.each { |key, valeur|
 #  puts key + ":"
 #  p valeur
