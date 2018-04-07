@@ -7,7 +7,7 @@ require 'twitter'
 
 # Researching tweets
 
-class Twi
+class TwitterAPI
 
 	#
 	# @param [float] latitude
