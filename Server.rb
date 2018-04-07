@@ -8,16 +8,21 @@ require_relative 'APIs/Twitter'
 
 class Server < Sinatra::Base
 
-#set :show_exceptions, :after_handler
-set :show_exceptions, false
+	set :show_exceptions, false
 
-error Exception do
-	content_type :json, 'charset' => 'utf-8'
-	headers 'Access-Control-Allow-Origin' => '*'
-	status 500
-	env['sinatra.error'].message
-end
+	error Exception do
+		content_type :json, 'charset' => 'utf-8'
+		headers 'Access-Control-Allow-Origin' => '*'
+		status 500
+		'{"Error": "' + env['sinatra.error'].message + '"}'
+	end
 
+	not_found do
+		content_type :json, 'charset' => 'utf-8'
+		headers 'Access-Control-Allow-Origin' => '*'
+		status 404
+		'{"Error": "404 - Page not found"}'
+	end
 
 	before do
 		content_type :json, 'charset' => 'utf-8'
