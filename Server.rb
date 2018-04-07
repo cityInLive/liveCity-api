@@ -21,8 +21,8 @@ class Server < Sinatra::Base
 		Weather.getWeather(params['city'].to_s).to_json
 	end
 
-	get '/wikipedia/:city' do
-		Wikipedia.getWikiInfo(params['city'].to_s).to_json
+	get '/wikipedia/:city,:departement' do
+		Wikipedia.getWikiInfo(params['city'].to_s,params['departement'].to_s).to_json
 	end
 
 	get '/instagram/:city' do
