@@ -20,6 +20,10 @@ class TwitterAPI
 		code << long.to_s
 		code << ",5km"
 		hash = {}
+		hash["lat"] = lat
+		hash["long"] = long
+		hash["tweets"] = []
+		tw = {}
 
 		client = Twitter::REST::Client.new do |config|
 			config.consumer_key        = 'KMXsBWU4Oi9Zymcfd7ociGAqB'
@@ -30,19 +34,19 @@ class TwitterAPI
 
 		client.search(" ",geocode:code.to_s).take(100).each_with_index do |tweet,index|
 			if !"#{tweet.full_text}".include? "RT" then
+				tw['tweetname'] = "#{tweet.user.name}"
+				tw['name'] = "#{tweet.user.screen_name}"
+				tw['tweetname'] = "#{tweet.user.name}"
+				tw['picture'] = "#{tweet.user.profile_image_uri_https}"
+				tw['text'] = "#{tweet.full_text}"
+				tw['like'] = "#{tweet.favorite_count}"
+				tw['retweet'] = "#{tweet.retweet_count}"
+				tw['date'] = "#{tweet.created_at}"
+				tw['url_tweet'] = "#{tweet.uri}"
+				tw['url_user'] = "#{tweet.user.uri}"
+				hash["tweets"] << tw
+				tw = {}
 
-				n = "tweet "
-				n << index.to_s
-
-				hash[n] = {}
-					hash[n]['name'] = "#{tweet.user.screen_name}"
-					hash[n]['tweetname'] = "#{tweet.user.	name}"
-					hash[n]['picture'] = "#{tweet.user.profile_image_uri_https}"
-					hash[n]['text'] = "#{tweet.full_text}"
-					hash[n]['like'] = "#{tweet.favorite_count}"
-					hash[n]['retweet'] = "#{tweet.retweet_count}"
-					hash[n]['date'] = "#{tweet.created_at}"
-					n = ""
 			end
 		end
 		return hash
@@ -63,4 +67,4 @@ end
 # 	puts "#{tweet.user.screen_name} : #{tweet.full_text}"
 # end
 
-#puts JSON.pretty_generate(Twi.getTweets(48.866667,2.333333))
+#puts JSON.pretty_generate(TwitterAPI.getTweets(48.866667,2.333333))
