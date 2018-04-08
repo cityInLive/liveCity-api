@@ -104,4 +104,4 @@ end
 # 	puts "#{tweet.user.screen_name} : #{tweet.full_text}"
 # end
 
-puts JSON.pretty_generate(TwitterAPI.getTweets(48.866667,2.333333))
+#puts JSON.pretty_generate(TwitterAPI.getTweets(48.866667,2.333333))
