@@ -26,28 +26,47 @@ class Wikipedia
   end
 
   def self.chercheSummary(tabData)
-    tab = tabData.split(". ")
+    tab = tabData.split(".\n\n")
     tab.each { |elem|
       if elem.include?("'''") then
+
         elem = elem[elem.index("'''")..-1]
+        #p elem
 
-        while(elem.include?("<ref"))
-          elem[elem[elem.index("<ref")..(elem.index("</ref>")+5)]] = ""
-        end
-
-        while(elem.include?("<br>"))
-          elem[elem[elem.index("<br>")..(elem.index("<br>")+3)]] = ""
-        end
-
-        while(elem.include?("("))
+        while(elem.include?("(") && elem.include?(")"))
           elem[elem[elem.index("(")..elem.index(")")]] = ""
         end
 
-        while(elem.include?("[["))
-          elem[elem.index("[[")..(elem.index("]]")+1)] = elem[(elem.index("[[")+2)..(elem.index("]]")-1)].split("|").first
+        while(elem.include?("</"))
+
+          fin = elem[elem.index("</")..-1]
+          fin = fin[0..fin.index(">")]
+
+          elem[elem[elem.index("<")..(elem.index(fin)) + fin.length]] = ""
+
         end
 
-        return elem.delete "'''"
+        while(elem.include?("[["))
+          tab = elem[(elem.index("[[")+2)..(elem.index("]]")-1)].split("|")
+          unless tab.at(1).eql?(nil) then
+            elem[elem.index("[[")..(elem.index("]]")+1)] = tab.at(1)
+          else elem[elem.index("[[")..(elem.index("]]")+1)] = tab.first end
+        end
+
+        while(elem.include?("{{"))
+
+          if elem.index("}}") < elem.index("{{") then
+            elem["}}"] = ""
+          end
+
+          tab = elem[(elem.index("{{")+2)..(elem.index("}}")-1)].split("|")
+          p tab.length
+          if tab.length.eql?(3) then
+            elem[elem.index("{{")..(elem.index("}}")+1)] = tab.at(1) + " "+ tab.at(2)
+          else elem[elem.index("{{")..(elem.index("}}")+1)] = tab.first end
+        end
+
+        return elem.delete "'"
       end
     }
   end
@@ -125,9 +144,9 @@ end
 
 #https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/1164px-Paris_-_Eiffelturm_und_Marsfeld2.jpg
 
-#rep = Wikipedia.getWikiInfo('Allonnes' , 'Sarthe')
+rep = Wikipedia.getWikiInfo('Lens' , 'Pas-de-Calais')
 
-#puts JSON.pretty_generate(rep)
+puts JSON.pretty_generate(rep)
 #rep.each { |key, valeur|
 #  puts key + ":"
 #  p valeur
