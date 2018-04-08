@@ -30,7 +30,10 @@ class Wikipedia
 
           end
 
-           elem = elem.delete "<br>"
+          while(elem.index("<br>"))
+            elem[elem.index("<br>")..elem.index("<br>")+3] = ""
+          end
+           #elem = elem.delete "<br>"
         end
 
         return elem.delete "\n"
@@ -45,7 +48,6 @@ class Wikipedia
       if elem.include?("'''") then
 
         elem = elem[elem.index("'''")..-1]
-        #p elem
 
         while(elem.include?("(") && elem.include?(")"))
           elem[elem[elem.index("(")..elem.index(")")]] = ""
@@ -74,12 +76,12 @@ class Wikipedia
           end
 
           tab = elem[(elem.index("{{")+2)..(elem.index("}}")-1)].split("|")
-          p tab.length
+
           if tab.length.eql?(3) then
             elem[elem.index("{{")..(elem.index("}}")+1)] = tab.at(1) + " "+ tab.at(2)
           else elem[elem.index("{{")..(elem.index("}}")+1)] = tab.first end
         end
-
+        elem = elem.delete "}}"
         return elem.delete "'"
       end
     }
@@ -102,6 +104,27 @@ class Wikipedia
 
   end
 
+  def self.cherchePopulation(pageid)
+
+    url = URI.parse(URI.escape('https://fr.wikipedia.org/w/api.php?format=json&action=parse&pageid=' + pageid + '&prop=text'))
+    data = HTTParty.get(url).parsed_response
+
+    if data.fetch('parse').fetch("text").has_key?('*') then
+      donnee = data.fetch('parse').fetch("text").fetch('*')
+      #puts JSON.pretty_generate(donnee)
+      donnee = donnee[donnee.index("nowrap")..donnee.index("nowrap")+30]
+      donnee = donnee[donnee.index(">")+1..donnee.index("<")-1]
+
+      while(donnee.index("&#"))
+        donnee[donnee.index("&#")..donnee.index(";")] = " "
+      end
+      return donnee + "habitants"
+
+    end
+    return false
+
+  end
+
   #@@API_KEY = 'AIzaSyAzfvWguWlvxRMPI2mFPI-BaW_-ufQxl8o'
 
   #
@@ -112,6 +135,7 @@ class Wikipedia
     res = Hash.new
 
     data = source.fetch("query").fetch("pages").values.first
+    pageid = source.fetch("query").fetch("pages").values.first.fetch("pageid").to_s
 
     if data.key?("revisions") then
       data = data.fetch("revisions").first.fetch("*")
@@ -127,9 +151,11 @@ class Wikipedia
         res["image"]["url"] = self.cherchePicture(city)
       else return self.getWikiInfo(city + " (" + departement + ")", departement) end
 
+      res["info"]["population"] = self.cherchePopulation(pageid)
+
       tabData = data[1..data.index("'''")].split("| ")
 
-      ["légende", "région", "département", "maire", "cp", "population", "population agglomération", "superficie"].each { |valeur|
+      ["légende", "région", "département", "maire", "cp", "population agglomération", "superficie"].each { |valeur|
 
         donnee = self.chercheData(tabData, valeur)
 
@@ -137,10 +163,19 @@ class Wikipedia
           if donnee.length > 2 then
             if valeur.eql?("légende") then
               res["image"]["desc"] = donnee
+            elsif valeur.eql?("superficie") then
+              res["info"][valeur] = donnee + "km²"
+            elsif valeur.eql?("population agglomération") then
+              res["info"][valeur] = donnee + " habitants"
             else res["info"][valeur] = donnee end
           end
         end
       }
+
+      if res.fetch("desc").include?("Unité|habitants") then
+        res.fetch("desc")["Unité|habitants"] = res["info"]["population"]
+      end
+
     else
       res["ERROR"] = {'code' => '007', 'message' => "#{city} not found"}
     end
@@ -158,7 +193,7 @@ end
 
 #https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/1164px-Paris_-_Eiffelturm_und_Marsfeld2.jpg
 
-rep = Wikipedia.getWikiInfo('Pau' , 'Pas-de-Calais')
+rep = Wikipedia.getWikiInfo('Solesmes' , 'Sarthe')
 
 puts JSON.pretty_generate(rep)
 #rep.each { |key, valeur|
