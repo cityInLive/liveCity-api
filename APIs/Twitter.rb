@@ -20,6 +20,10 @@ class TwitterAPI
 		code << long.to_s
 		code << ",5km"
 		hash = {}
+		hash["lat"] = lat
+		hash["long"] = long
+		hash["tweets"] = []
+		tw = {}
 
 		client = Twitter::REST::Client.new do |config|
 			config.consumer_key        = 'KMXsBWU4Oi9Zymcfd7ociGAqB'
@@ -31,21 +35,58 @@ class TwitterAPI
 		client.search(" ",geocode:code.to_s).take(100).each_with_index do |tweet,index|
 			if !"#{tweet.full_text}".include? "RT" then
 
-				n = "tweet "
-				n << index.to_s
+				days = "#{tweet.created_at}".split(" ")[0]
+				heure = "#{tweet.created_at}".split(" ")[1]
+				date = days.split("-")[2]
+				date << " "
+				date << getMonth(days.split("-")[1])
 
-				hash[n] = {}
-					hash[n]['name'] = "#{tweet.user.screen_name}"
-					hash[n]['tweetname'] = "#{tweet.user.	name}"
-					hash[n]['picture'] = "#{tweet.user.profile_image_uri_https}"
-					hash[n]['text'] = "#{tweet.full_text}"
-					hash[n]['like'] = "#{tweet.favorite_count}"
-					hash[n]['retweet'] = "#{tweet.retweet_count}"
-					hash[n]['date'] = "#{tweet.created_at}"
-					n = ""
+				tw['tweetname'] = "#{tweet.user.name}"
+				tw['name'] = "#{tweet.user.screen_name}"
+				tw['tweetname'] = "#{tweet.user.name}"
+				tw['picture'] = "#{tweet.user.profile_image_uri_https}"
+				tw['text'] = "#{tweet.full_text}"
+				tw['like'] = "#{tweet.favorite_count}"
+				tw['retweet'] = "#{tweet.retweet_count}"
+				tw['date'] = date
+				tw['time'] = heure
+				tw['url_tweet'] = "#{tweet.uri}"
+				tw['url_user'] = "#{tweet.user.uri}"
+				hash["tweets"] << tw
+				tw = {}
+
 			end
 		end
 		return hash
+	end
+
+	def self.getMonth(num)
+		case num
+		when "01"
+			return "Janvier"
+		when "02"
+			return "Fevrier"
+		when "03"
+			return "Mars"
+		when "04"
+			return "Avril"
+		when "05"
+			return "Mai"
+		when "06"
+			return "Juin"
+		when "07"
+			return "Juillet"
+		when "08"
+			return "Aout"
+		when "09"
+			return "Septembre"
+		when "10"
+			return "Octobre"
+		when "11"
+			return "Novembre"
+		when "12"
+			return "Decembre"
+		end
 	end
 end
 
@@ -63,4 +104,4 @@ end
 # 	puts "#{tweet.user.screen_name} : #{tweet.full_text}"
 # end
 
-#puts JSON.pretty_generate(Twi.getTweets(48.866667,2.333333))
+puts JSON.pretty_generate(TwitterAPI.getTweets(48.866667,2.333333))
