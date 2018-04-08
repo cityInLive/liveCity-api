@@ -19,6 +19,20 @@ class Wikipedia
             elem = elem.split("|")[1]
           end
         end
+
+        if valeur.eql?("légende") then
+          while(elem.include?("</"))
+
+            fin = elem[elem.index("</")..-1]
+            fin = fin[0..fin.index(">")]
+
+            elem[elem[elem.index("<")..(elem.index(fin)) + fin.length]] = ""
+
+          end
+
+           elem = elem.delete "<br>"
+        end
+
         return elem.delete "\n"
       end
     }
@@ -144,7 +158,7 @@ end
 
 #https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/1164px-Paris_-_Eiffelturm_und_Marsfeld2.jpg
 
-rep = Wikipedia.getWikiInfo('Lens' , 'Pas-de-Calais')
+rep = Wikipedia.getWikiInfo('Pau' , 'Pas-de-Calais')
 
 puts JSON.pretty_generate(rep)
 #rep.each { |key, valeur|
