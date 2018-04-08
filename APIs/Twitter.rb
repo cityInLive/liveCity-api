@@ -96,4 +96,4 @@ class TwitterAPI
 	end
 end
 
-puts JSON.pretty_generate(TwitterAPI.getTweets(48.866667,2.333333))
+#puts JSON.pretty_generate(TwitterAPI.getTweets(48.866667,2.333333))
