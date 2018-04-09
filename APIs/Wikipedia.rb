@@ -33,11 +33,22 @@ class Wikipedia
 
           end
 
-          while(elem.index("<br>"))
-            elem[elem.index("<br>")..elem.index("<br>")+3] = ""
-          end
            #elem = elem.delete "<br>"
         end
+
+        while(elem.index("<br>"))
+          elem[elem.index("<br>")..elem.index("<br>")+3] = ""
+        end
+        
+        while(elem.include?("</"))
+
+          fin = elem[elem.index("</")..-1]
+          fin = fin[0..fin.index(">")]
+
+          elem[elem[elem.index("<")..(elem.index(fin)) + fin.length]] = ""
+
+        end
+
         if(elem.include?("facultatif")) then
           return nil
         end
@@ -75,7 +86,7 @@ class Wikipedia
           else elem[elem.index("[[")..(elem.index("]]")+1)] = tab.first end
         end
 
-        while(elem.include?("{{"))
+        while(elem.include?("{{") && elem.include?("}}"))
 
           if elem.index("}}") < elem.index("{{") then
             elem["}}"] = ""
@@ -200,10 +211,10 @@ end
 
 #https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/1164px-Paris_-_Eiffelturm_und_Marsfeld2.jpg
 
-#rep = Wikipedia.getWikiInfo('Souvigné-sur-Sarthe' , 'Sarthe')
+rep = Wikipedia.getWikiInfo('Aix-en-Provence' , 'Bouches-du-Rhône')
 
 
-#puts JSON.pretty_generate(rep)
+puts JSON.pretty_generate(rep)
 #rep.each { |key, valeur|
 #  puts key + ":"
 #  p valeur
