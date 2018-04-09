@@ -39,7 +39,11 @@ class Wikipedia
         while(elem.index("<br>"))
           elem[elem.index("<br>")..elem.index("<br>")+3] = ""
         end
-        
+
+        while(elem.index("<br/>"))
+          elem[elem.index("<br/>")..elem.index("<br/>")+4] = ""
+        end
+
         while(elem.include?("</"))
 
           fin = elem[elem.index("</")..-1]
@@ -211,7 +215,7 @@ end
 
 #https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/1164px-Paris_-_Eiffelturm_und_Marsfeld2.jpg
 
-rep = Wikipedia.getWikiInfo('Aix-en-Provence' , 'Bouches-du-Rhône')
+rep = Wikipedia.getWikiInfo('Lyon' , 'Rhône')
 
 
 puts JSON.pretty_generate(rep)
