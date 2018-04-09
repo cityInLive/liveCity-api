@@ -11,8 +11,8 @@ API_KEY = '2ef02bfc5d85b81c1564777e08ebb821'
 class Weather
 
 	#
-	# @param [String] city's name
-	# @return [Hash] weather's data
+	# @param [String] City's name
+	# @return [Hash] Weather's data
 	def self.getWeather(city)
 
 		forURL = URI.parse(URI.escape('http://api.openweathermap.org/data/2.5/forecast?APPID='+API_KEY+'&q='+city+'&units=metric&lang=fr'))
@@ -41,6 +41,9 @@ class Weather
 		end
 	end
 
+	#
+	# @param [Integer] Week's number
+	# @return [String] Week's day
 	def self.getDayString(n)
 		case n
 		when 1

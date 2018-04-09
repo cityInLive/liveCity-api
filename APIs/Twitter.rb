@@ -10,9 +10,9 @@ require 'twitter'
 class TwitterAPI
 
 	#
-	# @param [float] latitude
-	# @param [float] longitude
-	# @return [Hash] tweets's data
+	# @param [Float] Latitude
+	# @param [Float] Longitude
+	# @return [Hash] Tweets's data
 	def self.getTweets(lat,long)
 
 		code = lat.to_s
@@ -32,11 +32,14 @@ class TwitterAPI
 			config.access_token_secret = '4LedHyiaBevvUao0aeOu4ONSv1G4CMV4RD5dYzX8z94aw'
 		end
 
-		client.search(" ",geocode:code.to_s).take(100).each_with_index do |tweet,index|
+		client.search(" ",geocode:code.to_s,result_type:"recent").take(100).each_with_index do |tweet,index|
 			if !"#{tweet.full_text}".include? "RT" then
 
 				days = "#{tweet.created_at}".split(" ")[0]
 				heure = "#{tweet.created_at}".split(" ")[1]
+				h = heure.split(":").first.to_i + 2
+				heure = h.to_s,":",heure.split(":")[1],":",heure.split(":")[2]
+
 				date = days.split("-")[2]
 				date << " "
 				date << getMonth(days.split("-")[1])
@@ -49,7 +52,7 @@ class TwitterAPI
 				tw['like'] = "#{tweet.favorite_count}"
 				tw['retweet'] = "#{tweet.retweet_count}"
 				tw['date'] = date
-				tw['time'] = heure
+				tw['time'] = heure.join
 				tw['url_tweet'] = "#{tweet.uri}"
 				tw['url_user'] = "#{tweet.user.uri}"
 				hash["tweets"] << tw
@@ -60,6 +63,9 @@ class TwitterAPI
 		return hash
 	end
 
+	#
+	# @param [String] Month's number
+	# @return [String] Month's name
 	def self.getMonth(num)
 		case num
 		when "01"
@@ -90,18 +96,4 @@ class TwitterAPI
 	end
 end
 
-
-# TEST
-
-# client = Twitter::REST::Client.new do |config|
-# 	config.consumer_key        = 'KMXsBWU4Oi9Zymcfd7ociGAqB'
-# 	config.consumer_secret     = 'lnK4MgKPsMgE8zrJBk2HZkX5K9mUs6hjaQfBjNb5n5pMr63TRU'
-# 	config.access_token        = '978921024526970880-vtfbWaaMHnEU1V5YIUYf4DTLG262Wl3'
-# 	config.access_token_secret = '4LedHyiaBevvUao0aeOu4ONSv1G4CMV4RD5dYzX8z94aw'
-# end
-#
-# client.search('to:justinbieber').take(100).collect do |tweet|
-# 	puts "#{tweet.user.screen_name} : #{tweet.full_text}"
-# end
-
-puts JSON.pretty_generate(TwitterAPI.getTweets(48.866667,2.333333))
+#puts JSON.pretty_generate(TwitterAPI.getTweets(48.866667,2.333333))
