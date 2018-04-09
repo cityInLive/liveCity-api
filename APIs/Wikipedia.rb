@@ -20,7 +20,10 @@ class Wikipedia
           end
         end
 
-        if valeur.eql?("légende") then
+        if valeur.eql?("département") then
+          elem = elem.split("|").first
+
+        elsif valeur.eql?("légende") then
           while(elem.include?("</"))
 
             fin = elem[elem.index("</")..-1]
@@ -34,6 +37,9 @@ class Wikipedia
             elem[elem.index("<br>")..elem.index("<br>")+3] = ""
           end
            #elem = elem.delete "<br>"
+        end
+        if(elem.include?("facultatif")) then
+          return nil
         end
 
         return elem.delete "\n"
@@ -82,7 +88,8 @@ class Wikipedia
           else elem[elem.index("{{")..(elem.index("}}")+1)] = tab.first end
         end
         elem = elem.delete "}}"
-        return elem.delete "'"
+        elem = elem.delete "'"
+        return elem + "."
       end
     }
   end
@@ -193,7 +200,7 @@ end
 
 #https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/1164px-Paris_-_Eiffelturm_und_Marsfeld2.jpg
 
-rep = Wikipedia.getWikiInfo('Solesmes' , 'Sarthe')
+rep = Wikipedia.getWikiInfo('Souvigné-sur-Sarthe' , 'Sarthe')
 
 puts JSON.pretty_generate(rep)
 #rep.each { |key, valeur|
